@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp All Chats</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #1f4037, #99f2c8, #38ef7d, #11998e);
+            background-size: 400% 400%;
+            animation: gradientBG 8s ease infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .title {
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .new-chat-btn {
+            background: linear-gradient(to right, #56ab2f, #a8e063);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .new-chat-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 90%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+
+        .chat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .chat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .chat-header, .chat-footer {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .chat-message {
+            color: white;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .chat-actions {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .edit-btn {
+            background: linear-gradient(to right, #1e90ff, #00c6ff);
+        }
+
+        .delete-btn {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+        }
+
+        .edit-btn:hover, .delete-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 10px;
+        }
+
+        .msg{
+            color: #1f4037;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">All Chats</h1>
+
+    <form method="GET" action="/chats/new">
+        <button class="new-chat-btn">New Chat</button>
+    </form>
+    <br/>
+
+    <div class="chat-container">
+        <% for(let chat of chats){ %>
+            <div class="chat-card">
+                <div class="chat-header">
+                    <p><strong>From:</strong> <%= chat.form %></p>
+                </div>
+                <div class="chat-message">
+                    <p class="msg"><%= chat.msg %></p>
+                    <div class="chat-actions">
+                        <form method="GET" action="/chats/<%= chat._id %>/edit">
+                            <button class="edit-btn">Edit</button>
+                        </form>
+                        <form method="POST" action="/chats/<%= chat._id %>?_method=DELETE">
+                            <button class="delete-btn">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="chat-footer">
+                    <p><strong>Received By:</strong> <%= chat.to %></p>
+                </div>
+                <p class="timestamp">Created at - <%= chat.created_at.toString().split(" ").slice(0,5).join("/") %></p>
+            </div>
+        <% } %> 
+    </div>
+</body>
+</html>
